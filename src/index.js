@@ -1,15 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { Provider,connect } from 'react-redux';
-import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import { createStore,applyMiddleware,combineReducers } from 'redux';
+import { createLogger } from 'redux-logger';
+import ThunkMiddleware from 'redux-thunk';
 import './index.css';
 import App from './containers/App';
 import reportWebVitals from './reportWebVitals';
-import { searchRobots } from './reducers';
+import { searchRobots,requestRobots } from './reducers';
 import 'tachyons';
 //as it exports more than 1 result. i.e. doesn't export only 1 value by default.
 
-const store=createStore(searchRobots);
+const logger=createLogger();
+const rootReducers=combineReducers({searchRobots,requestRobots});
+const store=createStore(rootReducers,applyMiddleware(ThunkMiddleware,logger));
+// this is in order. first ThunkMiddleware will run, and then logger.
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
